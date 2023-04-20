@@ -86,19 +86,19 @@ def post(user_id: int, name: str, firstname: str, time: datetime, lat: str, lon:
             valueInputOption='USER_ENTERED',
             body=body,
         ).execute()
-        print(f"updatedRange: {result.get('updates').get('updatedRange')}")
+        logging.info(f"updatedRange: {result.get('updates').get('updatedRange')}")
         return result
         # values = result.get('values', [])
 
         # if not values:
-        #     print('No data found.')
+        #     logging.info('No data found.')
         #     return
 
         # for row in values:
         #     # Print columns A and E, which correspond to indices 0 and 4.
-        #     print('%s' % (row[0]))
+        #     logging.info('%s' % (row[0]))
     except HttpError as err:
-        print(err)
+        logging.info(err)
 
 
 if __name__ == '__main__':
