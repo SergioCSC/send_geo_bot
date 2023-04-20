@@ -19,13 +19,6 @@ from datetime import datetime
 # SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
-# The ID and range of a sample spreadsheet.
-# SAMPLE_SPREADSHEET_ID = '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms'
-SAMPLE_SPREADSHEET_ID = '1C6OZdgnVsUUl6Hdr69aCL55yzW2VvRD8JBXWlsa3xV4'
-# SAMPLE_RANGE_NAME = 'Class Data!A2:E'
-current_row = 1
-SAMPLE_RANGE_NAME = f'Sheet1!A{current_row}:B'
-
 
 def _get_credentials() -> Credentials:
     logging.debug(f'{_get_credentials.__name__} START')
@@ -69,8 +62,6 @@ def post(user_id: int, name: str, firstname: str, time: datetime, lat: str, lon:
         # Call the Sheets API
         sheet = service.spreadsheets()
         
-        # result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-        #                             range=SAMPLE_RANGE_NAME).execute()
         body = {
             'values': [
                 [
@@ -80,7 +71,7 @@ def post(user_id: int, name: str, firstname: str, time: datetime, lat: str, lon:
         }
         range = f'Sheet1!A1:Z'
         result = sheet.values().append(
-            spreadsheetId=SAMPLE_SPREADSHEET_ID,
+            spreadsheetId=cfg.GOOGLE_SPREADSHEET_ID,
             range=range,
             insertDataOption="INSERT_ROWS",
             valueInputOption='USER_ENTERED',
@@ -88,18 +79,6 @@ def post(user_id: int, name: str, firstname: str, time: datetime, lat: str, lon:
         ).execute()
         logging.info(f"updatedRange: {result.get('updates').get('updatedRange')}")
         return result
-        # values = result.get('values', [])
 
-        # if not values:
-        #     logging.info('No data found.')
-        #     return
-
-        # for row in values:
-        #     # Print columns A and E, which correspond to indices 0 and 4.
-        #     logging.info('%s' % (row[0]))
     except HttpError as err:
         logging.info(err)
-
-
-if __name__ == '__main__':
-    pass
