@@ -11,11 +11,9 @@ COPY requirements.txt .
 
 RUN python${RUNTIME_VERSION} -m pip install -r requirements.txt
 
-COPY src/*.py .
-COPY .env .
-COPY google_key.json .
-COPY token.json .
+COPY src/*.py .env google_key.json token.json .
 
-ENTRYPOINT ["python", "-m", "awslambdaric"]
+# ENTRYPOINT ["python", "-m", "awslambdaric"]
+ENTRYPOINT ["python", "run.py"]
 
-CMD ["lambda.lambda_f"]
+# CMD ["lambda_.lambda_f"]
