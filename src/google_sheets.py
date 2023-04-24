@@ -38,12 +38,14 @@ def _get_credentials() -> Credentials:
             creds = flow.run_local_server(port=0)
         
         # Save the credentials for the next run
-        if cfg.IN_LINUX:  # can't save to disk in aws lambda
+        if False:  # cfg.IN_AWS_LAMBDA:  # can't save to disk in aws lambda
             # logging.debug(f'{creds.to_json() = }')
             pass
         else:
+            logging.debug('START writing to token.json')
             with open('token.json', 'w') as token:
                 token.write(creds.to_json())
+            logging.debug('FINISH writing to token.json')
     
     logging.debug(f'{_get_credentials.__name__} STOP')
     return creds

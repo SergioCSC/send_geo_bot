@@ -10,6 +10,10 @@ import logging
 import asyncio
 from datetime import datetime, timedelta
 from pathlib import Path
+import requests
+
+
+TELEGRAM_BOT_API_PREFIX = 'https://api.telegram.org/bot'
 
 # Configure logging
 # logging.basicConfig(level=logging.DEBUG)
@@ -53,13 +57,33 @@ def lambda_f(event: dict, context) -> None:
     }
 
 
+def set_webhook() -> None:
+    set_webhook_url = f'{TELEGRAM_BOT_API_PREFIX}{cfg.TELEGRAM_BOT_TOKEN}' \
+        f'/setwebhook?url={cfg.AWS_LAMBDA_API_GATEWAY_URL}' \
+        f'&max_connections=20'
+    print(f'{set_webhook_url = }')
+    requests.get(set_webhook_url)
+
+
+def delete_webhook() -> None:
+
+    delete_webhook_url = f'{TELEGRAM_BOT_API_PREFIX}{cfg.TELEGRAM_BOT_TOKEN}' \
+        '/deletewebhook'
+    requests.get(delete_webhook_url)
+
+
 async def main() -> None:
+    delete_webhook()
     await dp.start_polling(bot)
 
 
 if __name__ == '__main__':
     # asyncio.run(main())
+    
     event_path = Path('samples','lambda_events', 'share_location_continue.json')
     with open(event_path) as f:
         event = json.load(f)
     lambda_f(event, None)
+    
+    # set_webhook()
+    # pass
