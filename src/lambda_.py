@@ -15,10 +15,6 @@ import requests
 
 TELEGRAM_BOT_API_PREFIX = 'https://api.telegram.org/bot'
 
-# Configure logging
-# logging.basicConfig(level=logging.DEBUG)
-logging.getLogger().setLevel(logging.DEBUG)  # for aws lambda
-
 dp = Dispatcher()
 bot = Bot(cfg.TELEGRAM_BOT_TOKEN, parse_mode="HTML")
 
@@ -50,7 +46,7 @@ def lambda_f(event: dict, context) -> None:
     logging.debug('update: ' + str(update))
     update = json.loads(update)
     asyncio.get_event_loop().run_until_complete(dp.feed_raw_update(bot, update))
-    logging.debug('RETURN')
+    logging.debug('Return from asyncio loop and from Lambda')
     return {
         'statusCode': 200,
         'body': json.dumps('Hello from Lambda!')
@@ -61,7 +57,7 @@ def set_webhook() -> None:
     set_webhook_url = f'{TELEGRAM_BOT_API_PREFIX}{cfg.TELEGRAM_BOT_TOKEN}' \
         f'/setwebhook?url={cfg.AWS_LAMBDA_API_GATEWAY_URL}' \
         f'&max_connections=20'
-    print(f'{set_webhook_url = }')
+    logging.debug(f'{set_webhook_url = }')
     requests.get(set_webhook_url)
 
 
@@ -85,6 +81,3 @@ if __name__ == '__main__':
     with open(event_path) as f:
         event = json.load(f)
     lambda_f(event, None)
-    
-    # set_webhook()
-    # pass

@@ -39,7 +39,7 @@ def _get_credentials() -> Credentials:
         
         # Save the credentials for the next run
         if cfg.IN_AWS_LAMBDA:  # can't save to disk in aws lambda
-            logging.info(f"can't write credentials to disk in lambda")
+            logging.debug(f"can't write credentials to disk in lambda")
         else:
             logging.debug('START writing to token.json')
             with open('token.json', 'w') as token:
@@ -51,9 +51,6 @@ def _get_credentials() -> Credentials:
 
 
 def post(user_id: int, name: str, firstname: str, time: datetime, lat: str, lon: str) -> None:
-    """Shows basic usage of the Sheets API.
-    Prints values from a sample spreadsheet.
-    """
     
     creds: Credentials = _get_credentials()
     
