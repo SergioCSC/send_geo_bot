@@ -75,6 +75,7 @@ def delete_webhook() -> None:
 async def main() -> None:
     delete_webhook()
     await dp.start_polling(bot)
+    set_webhook()
 
 
 if __name__ == '__main__':
