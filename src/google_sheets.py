@@ -27,15 +27,18 @@ def _get_credentials() -> Credentials:
     # created automatically when the authorization flow completes for the first
     # time.
     if os.path.exists('token.json'):
+        logging.debug(f'token.json exists')
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
+            logging.debug(f'credentials refreshed')
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
                 'google_key.json', SCOPES)
             creds = flow.run_local_server(port=0)
+            logging.debug('istallAppFlow() using google_key.json completed')
         
         # Save the credentials for the next run
         if cfg.IN_AWS_LAMBDA:  # can't save to disk in aws lambda
