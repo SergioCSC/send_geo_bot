@@ -13,5 +13,5 @@ TIMEDELTA = 4  # Georgia timezone is GMT+04
 AWS_LAMBDA_API_GATEWAY_URL=environ.get('AWS_LAMBDA_API_GATEWAY_URL')
 
 # Configure logging
-# logging.basicConfig(level=logging.DEBUG)
-logging.getLogger().setLevel(logging.INFO)  # for aws lambda
+log_level = environ.get('LOG_LEVEL', 'INFO')
+logging.getLogger().setLevel(log_level)  # for aws lambda
